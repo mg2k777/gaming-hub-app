@@ -32,6 +32,14 @@ jobs:
         run: |
           npx cap init "Gaming Hub" "com.nexus.gaminghub" --web-dir dist
           npx cap add android
+          
+          # Injetar permissoes nativas no AndroidManifest.xml
+          MANIFEST_PATH="android/app/src/main/AndroidManifest.xml"
+          sed -i '/<\/manifest>/i \    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" \/>' $MANIFEST_PATH
+          sed -i '/<\/manifest>/i \    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" \/>' $MANIFEST_PATH
+          sed -i '/<\/manifest>/i \    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" \/>' $MANIFEST_PATH
+          sed -i '/<\/manifest>/i \    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" \/>' $MANIFEST_PATH
+
           npx cap sync android
 
       - name: Compilar Ficheiro APK
@@ -45,3 +53,4 @@ jobs:
         with:
           name: GamingHub-Installer-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
